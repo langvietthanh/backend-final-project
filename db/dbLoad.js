@@ -12,7 +12,6 @@ const versionString = "1.0";
 async function dbLoad() {
   try {
     await mongoose.connect(process.env.DB_URL);
-    // await mongoose.connect("localhost:27017");
     console.log("Successfully connected to MongoDB Atlas!");
   } catch (error) {
     console.log("Unable connecting to MongoDB Atlas!");
@@ -31,6 +30,8 @@ async function dbLoad() {
       location: user.location,
       description: user.description,
       occupation: user.occupation,
+      login_name: user.last_name.toLowerCase(),
+      password: "weak",
     });
     try {
       await userObj.save();
