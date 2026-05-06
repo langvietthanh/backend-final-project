@@ -7,7 +7,7 @@ const getPhotosOfUser = async function (req, res) {
         const userId = req.params.id;
         const user = await User.findById(userId);
         if (!user) {
-            return res.status(400).send({ message: "User not found" });
+            return res.status(404).send({ message: "User not found" });
         }
 
         const photos = await Photo.find({ user_id: userId })
@@ -40,28 +40,6 @@ const getPhotosOfUser = async function (req, res) {
     }
 }
 
-const addNewComment = async function (req, res) {
-    try {
-        const photoId = req.params.photo_id;
-        const comment = req.body.comment;
-        const userId = req.user_id;
-        const newComment = {
-            comment: comment,
-            date_time: new Date(),
-            user_id: userId
-        };
-        const photo = await Photo.findById(photoId);
-        if (!photo) {
-            return res.status(404).send({ message: "Photo not found" });
-        }
-        photo.comments.push(newComment);
-        await photo.save();
-        res.status(200).send();
-    } catch (error) {
-        res.status(400).send({ message: "Invalid ID format" });
-    }
-}
-
 const addPhoto = async function (req, res) {
     try {
         if (!req.file) {
@@ -85,6 +63,5 @@ const addPhoto = async function (req, res) {
 
 module.exports = {
     getPhotosOfUser,
-    addNewComment,
     addPhoto
 }   

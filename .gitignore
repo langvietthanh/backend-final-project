@@ -5,3 +5,5 @@ pdf_content.txt
 read_pdf.js
 read_pdf.py
 pdf_content_en.txt
+images/*
+!images/.gitkeep
