@@ -16,7 +16,6 @@ const getPhotosOfUser = async function (req, res) {
                 model: "Users",
                 select: "_id first_name last_name"
             });
-
         const formattedPhotos = photos.map(photo => {
             return {
                 _id: photo._id,
@@ -45,6 +44,9 @@ const addPhoto = async function (req, res) {
         if (!req.file) {
             return res.status(400).send({ message: "No file uploaded" });
         }
+
+        // In toàn bộ thông tin file ra console để bạn dễ dàng quan sát
+        console.log("Thông tin file vừa upload:", req.file);
 
         const file = req.file;
         const newPhoto = new Photo({

@@ -40,7 +40,8 @@ const adminLogout = async (request, response) => {
         const token = authHeader.split(" ")[1];
         try {
             jwt.verify(token, process.env.JWT_SECRET);
-        } catch (err) {
+        } 
+        catch (err) {
             // Token không hợp lệ hoặc đã hết hạn
             return response.status(400).json({ message: "User is not logged in or token is invalid" });
         }
