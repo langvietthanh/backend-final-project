@@ -1,5 +1,7 @@
 const Photo = require("../db/photoModel");
 const User = require("../db/userModel");
+const fs = require("fs");
+const path = require("path");
 
 const getPhotosOfUser = async function (req, res) {
     try {
@@ -61,7 +63,50 @@ const addPhoto = async function (req, res) {
     }
 }
 
+const deletePhoto = async function (req, res) {
+    try {
+        const id = req.params.photoIdDeleted;
+        const photoDelete = await Photo.findByIdAndDelete(id);
+        if(!photoDelete) 
+            return res.status(404).send({message:"Not found Photo"});
+
+        const filePath = path.join(__dirname, "..", "images", photoDelete.file_name);
+        console.log(__dirname);
+        console.log(filePath);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+
+        return res.status(200).send({message: "Photo deleted success"});
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+}
+
+const replacePhoto = async function (req, res) {
+    try {
+        const id = req.params.photoIdReplaced;
+        const photo = await Photo.findById(id);
+        if (!photo) {
+            return res.status(404).send({ message: "Photo not found" });
+        }
+        const file = req.file;
+        const filePath = path.join(__dirname, "..", "images", photo.file_name);
+        if (fs.existsSync(filePath)){
+            fs.unlinkSync(filePath);
+        }
+        photo.file_name = file.filename;
+        await photo.save();
+        return res.status(200).send({message: "Photo replaced success"});
+    }
+    catch(err){
+        return res.status(500).send({ message: error.message });
+    }
+}
+
 module.exports = {
     getPhotosOfUser,
-    addPhoto
+    addPhoto,
+    deletePhoto,
+    replacePhoto
 }   

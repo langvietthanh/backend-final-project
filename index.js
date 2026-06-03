@@ -3,11 +3,14 @@ const app = express();
 const cors = require("cors");
 const dbConnect = require("./db/dbConnect");
 const router = require("./routes");
+const morgan = require("morgan");
+
 
 dbConnect();
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
+app.use(morgan("dev"));
 app.use("/images", express.static("images"));
 
 router(app);
